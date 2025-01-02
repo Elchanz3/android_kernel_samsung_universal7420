@@ -30,15 +30,15 @@
 
 #define APOLLO_EMA_CON (EXYNOS7420_VA_SYSREG + 0x0038)
 
-static int max_support_idx_CA53;
-static int min_support_idx_CA53 = (CPUFREQ_LEVEL_END_CA53 - 1);
-
 static struct clk *mout_apollo;
 static struct clk *mout_apollo_pll;
 static struct clk *mout_bus0_pll_apollo;
 
 static unsigned int exynos7420_volt_table_CA53[CPUFREQ_LEVEL_END_CA53];
 static unsigned int exynos7420_abb_table_CA53[CPUFREQ_LEVEL_END_CA53];
+
+static unsigned int max_support_idx_CA53 = L3;    /* 1.7GHz */
+static unsigned int min_support_idx_CA53 = L11;   /* 900MHz */
 
 static struct cpufreq_frequency_table exynos7420_freq_table_CA53[] = {
 	{L0,  2000 * 1000},
@@ -272,33 +272,30 @@ static void exynos7420_set_frequency_CA53(unsigned int old_index,
 
 static void __init set_volt_table_CA53(void)
 {
-	unsigned int i;
-	unsigned int asv_volt = 0;
+    unsigned int i;
+    unsigned int asv_volt = 0;
 
-	for (i = 0; i < CPUFREQ_LEVEL_END_CA53; i++) {
-		asv_volt = get_match_volt(ID_CL0, exynos7420_freq_table_CA53[i].frequency);
-		if (!asv_volt)
-			exynos7420_volt_table_CA53[i] = asv_voltage_7420_CA53[i];
-		else
-			exynos7420_volt_table_CA53[i] = asv_volt;
+    for (i = 0; i < CPUFREQ_LEVEL_END_CA53; i++) {
+        asv_volt = get_match_volt(ID_CL0, exynos7420_freq_table_CA53[i].frequency);
+        if (!asv_volt)
+            exynos7420_volt_table_CA53[i] = asv_voltage_7420_CA53[i];
+        else
+            exynos7420_volt_table_CA53[i] = asv_volt;
 
-		pr_info("CPUFREQ of CA53  L%d : %d uV\n", i,
-				exynos7420_volt_table_CA53[i]);
+        pr_info("CPUFREQ of CA53  L%d : %d uV\n", i,
+                exynos7420_volt_table_CA53[i]);
 
-		exynos7420_abb_table_CA53[i] =
-			get_match_abb(ID_CL0, exynos7420_freq_table_CA53[i].frequency);
+        exynos7420_abb_table_CA53[i] =
+            get_match_abb(ID_CL0, exynos7420_freq_table_CA53[i].frequency);
 
-		pr_info("CPUFREQ of CA53  L%d : ABB %d\n", i,
-				exynos7420_abb_table_CA53[i]);
-	}
-	
-	max_support_idx_CA53 = L3;	/* 1.7GHz */
-	min_support_idx_CA53 = L11;	/* 900MHz */
-	
-	pr_info("CPUFREQ of CA53 max_freq : L%d %u khz\n", max_support_idx_CA53,
-		exynos7420_freq_table_CA53[max_support_idx_CA53].frequency);
-	pr_info("CPUFREQ of CA53 min_freq : L%d %u khz\n", min_support_idx_CA53,
-		exynos7420_freq_table_CA53[min_support_idx_CA53].frequency);
+        pr_info("CPUFREQ of CA53  L%d : ABB %d\n", i,
+                exynos7420_abb_table_CA53[i]);
+    }
+
+    pr_info("CPUFREQ of CA53 max_freq : L%d %u khz\n", max_support_idx_CA53,
+            exynos7420_freq_table_CA53[max_support_idx_CA53].frequency);
+    pr_info("CPUFREQ of CA53 min_freq : L%d %u khz\n", min_support_idx_CA53,
+            exynos7420_freq_table_CA53[min_support_idx_CA53].frequency);
 }
 
 static bool exynos7420_is_alive_CA53(void)
