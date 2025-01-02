@@ -1,10 +1,11 @@
 #!/bin/bash
 
-ARCH=arm64
+export ARCH=arm64
+
 KERNEL_SOURCE_DIR="$(pwd)"
 OUTPUT_DIR="$(pwd)/kout"
 CONFIG_FILE="$(pwd)/arch/arm64/configs/exynos7420-zeroflte_defconfig"
-CROSS_COMPILE="/home/chanz22/tc/aarch64-linux-android-4.9/bin/aarch64-linux-android-" 
+CROSS_COMPILE="/home/chanz22/tc/gcc-linaro-4.9.4/bin/aarch64-elf-" 
 JOBS=$(nproc)
 
 if [ ! -d "$KERNEL_SOURCE_DIR" ]; then
@@ -14,13 +15,9 @@ fi
 
 cd "$KERNEL_SOURCE_DIR" || exit
 
-make mrproper
+make  mrproper
 
-if [ -f "$CONFIG_FILE" ]; then
-    cp "$CONFIG_FILE" .config
-else
-    exit 1
-fi
+make O="$OUTPUT_DIR" exynos7420-zeroflte_defconfig
 
 make -j"$JOBS" O="$OUTPUT_DIR" CROSS_COMPILE="$CROSS_COMPILE" Image modules dtbs
 
