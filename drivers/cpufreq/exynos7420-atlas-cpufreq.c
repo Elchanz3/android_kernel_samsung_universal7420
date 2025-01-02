@@ -31,7 +31,7 @@
 #define ATLAS_EMA_CON (EXYNOS7420_VA_SYSREG + 0x0138)
 #define CPU_EMA_REG1 (EXYNOS7420_VA_SYSREG + 0x2908)
 
-static unsigned int max_support_idx_CA57 = L4;    /* 2.1GHz */
+static unsigned int max_support_idx_CA57 = L3;    /* 2.2GHz */
 static unsigned int min_support_idx_CA57 = L17;   /* 800MHz */
 
 static struct clk *mout_atlas;
