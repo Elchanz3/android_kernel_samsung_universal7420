@@ -96,19 +96,11 @@ static struct apll_freq exynos7420_apll_freq_CA53[] = {
  * ASV group voltage table
  */
 static const unsigned int asv_voltage_7420_CA53[CPUFREQ_LEVEL_END_CA53] = {
-#ifdef CONFIG_EXYNOS7420_OVERCLOCK
 	1473750,	/* L0  2000 */
 	1398750,	/* L1  1900 */
 	1323750,	/* L2  1800 */
 	1248750,	/* L3  1700 */
 	1173750,	/* L4  1600 */
-#else
-	1168750,	/* L0  2000 */
-	1168750,	/* L1  1900 */
-	1168750,	/* L2  1800 */
-	1168750,	/* L3  1700 */
-	1168750,	/* L4  1600 */
-#endif
 	1081250,	/* L5  1500 */
 	1031250,	/* L6  1400 */
 	 981250,	/* L7  1300 */
@@ -299,20 +291,10 @@ static void __init set_volt_table_CA53(void)
 		pr_info("CPUFREQ of CA53  L%d : ABB %d\n", i,
 				exynos7420_abb_table_CA53[i]);
 	}
-	switch (exynos_get_table_ver()) {
-	case 0 :
-	case 1 :
-	case 4 :
-		max_support_idx_CA53 = L6; break;	/* 1.4GHz */
-	case 5 :
-		max_support_idx_CA53 = L8; break;	/* 1.2GHz */
-	case 12 :
-		max_support_idx_CA53 = L7; break;	/* 1.3GHz */
-	default :
-		max_support_idx_CA53 = L5;	/* 1.5GHz */
-	}
-
+	
+	max_support_idx_CA53 = L3;	/* 1.7GHz */
 	min_support_idx_CA53 = L16;	/* 400MHz */
+	
 	pr_info("CPUFREQ of CA53 max_freq : L%d %u khz\n", max_support_idx_CA53,
 		exynos7420_freq_table_CA53[max_support_idx_CA53].frequency);
 	pr_info("CPUFREQ of CA53 min_freq : L%d %u khz\n", min_support_idx_CA53,
